@@ -105,7 +105,7 @@ private void Update() {
         {
           
           Debug.Log("can see AsteroidBad");
-          rend.material.SetFloat(1f);
+          //rend.material.SetFloat(1f);
           //AstroHit.Play();
         
 
