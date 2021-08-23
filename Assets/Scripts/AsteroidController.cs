@@ -5,14 +5,7 @@ using UnityEngine;
 public class AsteroidController : MonoBehaviour
 {
 
-    //adjust this to change speed
-//[SerializeField]
-//float speed = 5f;
-//adjust this to change how high it goes
-///[SerializeField]
-//float height = 0.5f;
-    // Start is called before the first frame update
-     Vector3 pos;
+
     Rigidbody2D m_Rigidbody;
 
     [SerializeField]
@@ -29,23 +22,15 @@ public class AsteroidController : MonoBehaviour
 
   private  void Start()
     {
-        pos = transform.position;
-             //Fetch the Rigidbody component you attach from your GameObject
-       transform.Rotate(new Vector3(0,0,-45)*Time.deltaTime);
-        //Set the speed of the GameObject
+
         addStartForce();
     }
 
     // Update is called once per frame
     void Update()
     {
-      // m_Rigidbody.velocity = transform.forward * m_Speed;
 
-         //float newY = Mathf.Sin(Time.time * speed) * height + pos.y;
-         //set the object's Y to the new calculated Y
-         //transform.position = new Vector3(transform.position.x, newY, transform.position.z) ;
-
-        //transform.position = new Vector3(transform.position.x,newY, transform.position.z) ;
+         transform.Rotate(new Vector3(0,0,-45)*Time.deltaTime);
 
     }
 

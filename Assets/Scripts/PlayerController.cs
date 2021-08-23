@@ -7,35 +7,39 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
-
-      public Renderer rend;
+    public float Health;
+    public float MaxHealth;
+    public float AsteroidBadDamage;
+    public Material UFOInvertColour;
     public float speed;
     public Text txtCounter;
     public Text txtWintext;
 
     public AudioSource PickupAudio;
 
-   public AudioSource PortalActiveAudio;
+    public AudioSource PortalActiveAudio;
 
     public AudioSource UFOMoveAudio;
 
   // public ParticleSystem AstroHit;
-   public GameObject portal;
-
+    public GameObject portal;
     bool isMoving= false;
     private Rigidbody2D rb2d;
-     public float myValue = 1.0f;
- //Shader.SetGlobalFloat("_myValue", myValue);
+    public float myValue = 1.0f;
 
     private int countScore;
     // Start is called before the first frame update
     void Start()
     {
-        rb2d=GetComponent<Rigidbody2D>();
-         rend = GetComponent<Renderer>();
-        countScore = 0;
-        txtWintext.text="";
-        CounterUpdate();
+       rb2d=GetComponent<Rigidbody2D>();
+       countScore = 0;
+       Health=0f;
+       MaxHealth=100f;
+       AsteroidBadDamage=0.25f;
+       txtWintext.text="";
+       CounterUpdate();
+        /*Set the UFO Shader*/
+       UFOInvertColour.SetFloat("_Threshold",0);
             
     }
 
@@ -105,12 +109,20 @@ private void Update() {
         {
           
           Debug.Log("can see AsteroidBad");
-          //rend.material.SetFloat(1f);
+          UFOInvertColour.SetFloat("_Threshold",UFOLife());
           //AstroHit.Play();
         
 
         }
     }
+
+
+float UFOLife()
+{
+    
+   return Health=Health+AsteroidBadDamage;
+}
+
 
 
     void CounterUpdate()
