@@ -110,6 +110,7 @@ private void Update() {
           
           Debug.Log("can see AsteroidBad");
           UFOInvertColour.SetFloat("_Threshold",UFOLife());
+ 
           //AstroHit.Play();
         
 
@@ -139,12 +140,12 @@ float UFOLife()
        if(countScore>=10&&GetCurrentActiveScene()==2)
        {
            txtWintext.text = "Level Clear Next Level in Dev";
-          //portal.SetActive(true);
+            portal.SetActive(true);
             PortalActiveAudio.Play();
             
 
        }
-       else if(countScore>=6&&GetCurrentActiveScene()==3)
+       else if(countScore>=14&&GetCurrentActiveScene()==3)
        {
             txtWintext.text = "You WIN";
        }
