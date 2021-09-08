@@ -1,4 +1,4 @@
-//using System.Diagnostics;
+using System.Diagnostics;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System;
@@ -47,7 +47,8 @@ public class PlayerController : MonoBehaviour
        AsteroidBadDamage=UnityEngine.Random.Range (0.20f,0.25f);
        txtWintext.text="";
        txtDamage.text="";
-       CounterUpdate();
+       txtCounter.text="";
+       //CounterUpdate();
         /*Set the UFO Shader*/
        UFOInvertColour.SetFloat("_Threshold",0);
             
@@ -129,13 +130,13 @@ void IsUFOMoving()
         if(other.gameObject.CompareTag("AsteroidBad"))
         {
           
-          Debug.Log("can see AsteroidBad");
+          UnityEngine.Debug.Log("can see AsteroidBad");
           UFOInvertColour.SetFloat("_Threshold",UFOLife());
  
           //AstroHit.Play();
            if(Health>=1f)
            {
-             Debug.Log("UFO Crashed");
+             UnityEngine.Debug.Log("UFO Crashed");
              Application.Quit();  
            }
 
@@ -161,17 +162,20 @@ float UFOLife()
     void CounterUpdate()
     {
       txtCounter.text="Collect:"+countScore.ToString();
+       UnityEngine.Debug.Log("Collect Track"+countScore.ToString());
       if(countScore>=6&&GetCurrentActiveScene()==1){
 
           txtWintext.text = "Level Clear";
+        UnityEngine.Debug.Log("Current Scene"+GetCurrentActiveScene().ToString());
           portal.SetActive(true);
           PortalActiveAudio.Play();
 
       }
       else 
-       if(countScore>=10&&GetCurrentActiveScene()==2)
+       if(countScore>=10 && GetCurrentActiveScene()==2)
        {
-           txtWintext.text = "Level Clear Next Level in Dev";
+           txtWintext.text = "Level Clear";
+          UnityEngine.Debug.Log("Current Scene"+GetCurrentActiveScene().ToString());
             portal.SetActive(true);
             PortalActiveAudio.Play();
             
@@ -179,7 +183,8 @@ float UFOLife()
        }
        else if(countScore>=14&&GetCurrentActiveScene()==3)
        {
-            txtWintext.text = "You WIN";
+            txtWintext.text = "You WIN:Next Level in Dev";
+            UnityEngine.Debug.Log("Current Scene"+GetCurrentActiveScene().ToString());
             //Time.timeScale= 0f;//pause or freeze all objects within a scene *BUG Song still plays
            // UFOMoveAudio.Stop();
        }
