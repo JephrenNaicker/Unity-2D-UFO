@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     public float AsteroidBadDamage;
     public Material UFOInvertColour;
     public float speed;
-    public Text txtCounter;
+    public Text txtCollect;
     public Text txtWintext;
     public Text txtDamage;
     public AudioSource PickupAudio;
@@ -31,8 +31,6 @@ public class PlayerController : MonoBehaviour
     public GameObject portal;
     bool isMoving= false;
     private Rigidbody2D rb2d;
-    public float myValue = 1.0f;
-
     private int countScore;
     // Start is called before the first frame update
     void Start()
@@ -47,7 +45,7 @@ public class PlayerController : MonoBehaviour
        AsteroidBadDamage=UnityEngine.Random.Range (0.20f,0.25f);
        txtWintext.text="";
        txtDamage.text="";
-       txtCounter.text="";
+       txtCollect.text="Collect:";
        //CounterUpdate();
         /*Set the UFO Shader*/
        UFOInvertColour.SetFloat("_Threshold",0);
@@ -114,10 +112,12 @@ void IsUFOMoving()
     {
         if(other.gameObject.CompareTag("PickUp"))
         {
-            Destroy(other.gameObject);
+            
+            other.gameObject.SetActive(false);
             PickupAudio.Play();
             countScore++;
             CounterUpdate();
+            Destroy(other.gameObject);
            
 
         }
@@ -161,12 +161,12 @@ float UFOLife()
    */
     void CounterUpdate()
     {
-      txtCounter.text="Collect:"+countScore.ToString();
-       UnityEngine.Debug.Log("Collect Track"+countScore.ToString());
+      txtCollect.text="Collect:"+countScore.ToString();
+      
       if(countScore>=6&&GetCurrentActiveScene()==1){
 
           txtWintext.text = "Level Clear";
-        UnityEngine.Debug.Log("Current Scene"+GetCurrentActiveScene().ToString());
+        
           portal.SetActive(true);
           PortalActiveAudio.Play();
 
@@ -175,7 +175,7 @@ float UFOLife()
        if(countScore>=10 && GetCurrentActiveScene()==2)
        {
            txtWintext.text = "Level Clear";
-          UnityEngine.Debug.Log("Current Scene"+GetCurrentActiveScene().ToString());
+          
             portal.SetActive(true);
             PortalActiveAudio.Play();
             
@@ -184,7 +184,7 @@ float UFOLife()
        else if(countScore>=14&&GetCurrentActiveScene()==3)
        {
             txtWintext.text = "You WIN:Next Level in Dev";
-            UnityEngine.Debug.Log("Current Scene"+GetCurrentActiveScene().ToString());
+            
             //Time.timeScale= 0f;//pause or freeze all objects within a scene *BUG Song still plays
            // UFOMoveAudio.Stop();
        }
