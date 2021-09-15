@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 public class PortalController : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField]
-    private float gravitationalForce = 5;
+    // [SerializeField]
+    // private float gravitationalForce = 5;
     public Rigidbody2D player;
     void Start()
     {

@@ -11,9 +11,13 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
+    
+    [SerializeField]
+     private Transform pfDamagePopUp;//prefab
+    
     public float Health;
     public float MaxHealth;
-    public float AsteroidBadDamage;
+    private float AsteroidBadDamage;
     public Material UFOInvertColour;
     public float speed;
     public Text txtCollect;
@@ -25,7 +29,9 @@ public class PlayerController : MonoBehaviour
 
     public AudioSource UFOMoveAudio;
     
-    public HeathBarController healthBar;
+    public HeathBarController healthBar;//this is a script
+    //public DamagePopUpController damagePopUpC;//this is a script
+
 
   // public ParticleSystem AstroHit;
     public GameObject portal;
@@ -33,6 +39,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb2d;
     private int countScore;
     // Start is called before the first frame update
+    
     void Start()
     {
        rb2d=GetComponent<Rigidbody2D>();
@@ -46,6 +53,11 @@ public class PlayerController : MonoBehaviour
        txtWintext.text="";
        txtDamage.text="";
        txtCollect.text="Collect:";
+
+        
+        
+             
+             
        //CounterUpdate();
         /*Set the UFO Shader*/
        UFOInvertColour.SetFloat("_Threshold",0);
@@ -148,9 +160,12 @@ void IsUFOMoving()
 */
 float UFOLife()
 {
+     Transform damagePopUpTransform = Instantiate(pfDamagePopUp,rb2d.position,Quaternion.identity);
+     DamagePopUpController   damagePopUpC = damagePopUpTransform.GetComponent<DamagePopUpController>();
     var CurrHealth = (Health+=AsteroidBadDamage);
     UnityEngine.Debug.Log("CurrHealth"+CurrHealth);
     healthBar.setHealth(CurrHealth);
+    damagePopUpC.SetDamageText( Mathf.Round(AsteroidBadDamage * 100f));
     txtDamage.text=CurrHealth.ToString();
    return CurrHealth;
 }
