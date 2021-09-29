@@ -14,7 +14,9 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField]
      private Transform pfDamagePopUp;//prefab
-    
+
+    public Animator animator;
+
     public float Health;
     public float MaxHealth;
     private float AsteroidBadDamage;
@@ -133,6 +135,17 @@ void IsUFOMoving()
            
 
         }
+
+        if(other.gameObject.CompareTag("Portal"))
+        {    
+            UnityEngine.Debug.Log("can see Portal");
+             animator.SetBool("CanSeePortal",true);
+             PortalDelay();
+             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
+
+        }
+
+        
     }
 
     
@@ -225,6 +238,10 @@ float UFOLife()
     // }
 
 
-
+   IEnumerator PortalDelay()
+   {
+     yield return new WaitForSeconds(25);
+    
+   }
 
 }

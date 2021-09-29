@@ -9,6 +9,7 @@ public class PortalController : MonoBehaviour
     // [SerializeField]
     // private float gravitationalForce = 5;
     public Rigidbody2D player;
+    //public Animator animator;
     void Start()
     {
         
@@ -23,11 +24,11 @@ public class PortalController : MonoBehaviour
 
      void OnTriggerEnter2D(Collider2D other)
     {
-        if(other.gameObject.CompareTag("Player"))
-        {
-           
-             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
+        // if(other.gameObject.CompareTag("Player"))
+        // {
+        //     // animator.SetBool("CanSeePortal",true);
+        //      SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
 
-        }
+        // }
     }
 }
