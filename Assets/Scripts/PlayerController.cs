@@ -96,6 +96,8 @@ private void Update() {
 */
 void IsUFOMoving()
 {
+  
+ 
     if(rb2d.velocity.magnitude > 8)
       {      
           isMoving= true; 
@@ -112,11 +114,19 @@ void IsUFOMoving()
              UFOMoveAudio.Play();
           }
       }
-      else 
+       else 
       {
         
           UFOMoveAudio.Stop();
       }
+    
+      if (isMoving&&PauseMenuController.isGamePaused)
+        {
+        
+          UFOMoveAudio.Stop();
+       }
+    
+     
 }
 
 /*
@@ -141,6 +151,7 @@ void IsUFOMoving()
             UnityEngine.Debug.Log("can see Portal");
              animator.SetBool("CanSeePortal",true);
              PortalDelay();
+             //delay not working
              SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
 
         }
@@ -173,8 +184,8 @@ void IsUFOMoving()
 */
 float UFOLife()
 {
-     Transform damagePopUpTransform = Instantiate(pfDamagePopUp,rb2d.position,Quaternion.identity);
-     DamagePopUpController   damagePopUpC = damagePopUpTransform.GetComponent<DamagePopUpController>();
+    Transform damagePopUpTransform = Instantiate(pfDamagePopUp,rb2d.position,Quaternion.identity);
+    DamagePopUpController   damagePopUpC = damagePopUpTransform.GetComponent<DamagePopUpController>();
     var CurrHealth = (Health+=AsteroidBadDamage);
     UnityEngine.Debug.Log("CurrHealth"+CurrHealth);
     healthBar.setHealth(CurrHealth);
