@@ -1,8 +1,11 @@
+using System.Diagnostics;
 using System.Threading;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class PauseMenuController : MonoBehaviour
 {
@@ -27,7 +30,7 @@ public class PauseMenuController : MonoBehaviour
   }
 
 
-  void Resume()
+  public void Resume()
   {
     pauseMenuUI.SetActive(false);
     Time.timeScale = 1f;
@@ -45,6 +48,18 @@ public class PauseMenuController : MonoBehaviour
   }
 
 
+public void LoadMenu()
+{
+ SceneManager.LoadScene("MenuScene");
+  Time.timeScale = 1f;
+    isGamePaused = false;
+}
+
+
+public void QuitGame()
+{
+UnityEngine.Debug.Log("Quit Game");
+}
 
 
 }
