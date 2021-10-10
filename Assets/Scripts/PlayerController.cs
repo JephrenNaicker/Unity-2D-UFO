@@ -149,10 +149,13 @@ void IsUFOMoving()
         if(other.gameObject.CompareTag("Portal"))
         {    
             UnityEngine.Debug.Log("can see Portal");
+            //StopAllConroutines();
              animator.SetBool("CanSeePortal",true);
-             PortalDelay();
+             UnityEngine.Debug.Log("Start Animation");
+             PortalDelay(25f);
+              UnityEngine.Debug.Log("End Animation");
              //delay not working
-             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
+            // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
 
         }
 
@@ -232,7 +235,7 @@ float UFOLife()
      /*
      Get The Current ActiveScene 
      */
-    public int  GetCurrentActiveScene()
+    public static int  GetCurrentActiveScene()
     {
       return    SceneManager.GetActiveScene().buildIndex;
     }
@@ -249,9 +252,9 @@ float UFOLife()
     // }
 
 
-   IEnumerator PortalDelay()
+   IEnumerator PortalDelay(float timeDelay)
    {
-     yield return new WaitForSeconds(25);
+     yield return new WaitForSeconds(timeDelay);
     
    }
 
