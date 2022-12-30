@@ -103,7 +103,8 @@ void IsUFOMoving()
           isMoving= true; 
       }else 
       {
-          isMoving=false;
+            animator.SetBool("IsUFOMoving", false);
+            isMoving =false;
       }
 
       if(isMoving)
@@ -116,8 +117,8 @@ void IsUFOMoving()
       }
        else 
       {
-        
-          UFOMoveAudio.Stop();
+            animator.SetBool("IsUFOMoving", false);
+            UFOMoveAudio.Stop();
       }
     
       if (isMoving&&PauseMenuController.isGamePaused)
