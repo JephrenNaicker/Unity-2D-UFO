@@ -33,7 +33,7 @@ public class DarkMatterPickUpController : MonoBehaviour
    {
          rb2dDark=GetComponent<Rigidbody2D>();
          Speed=250f;    
-        rb2dDark.velocity = initialVelocity;
+        rb2dDark.linearVelocity = initialVelocity;
    }
 
     // Start is called before the first frame update
@@ -52,7 +52,7 @@ public class DarkMatterPickUpController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      lastFrameVelocity=rb2dDark.velocity;
+      lastFrameVelocity=rb2dDark.linearVelocity;
         //InvertDarkMatterColour();
       
        FleePlayer();
@@ -133,7 +133,7 @@ public class DarkMatterPickUpController : MonoBehaviour
         var direction = Vector3.Reflect(lastFrameVelocity.normalized, collisionNormal);
 
         //Debug.Log("Out Direction: " + direction);
-        rb2dDark.velocity = direction * Mathf.Max(speed, minVelocity);
+        rb2dDark.linearVelocity = direction * Mathf.Max(speed, minVelocity);
     }
 
 

@@ -1,262 +1,167 @@
-using System.Diagnostics;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
-using System;
-using System.Collections.Generic;
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-
 public class PlayerController : MonoBehaviour
 {
-    
-    [SerializeField]
-     private Transform pfDamagePopUp;//prefab
+    // UI Elements
+    [SerializeField] private Text txtCollect;
+    [SerializeField] private Text txtWinText;
+    [SerializeField] private Text txtDamage;
 
-    public Animator animator;
+    // Health-related
+    public float Health = 0f;
+    public float MaxHealth = 100f;
+    private float asteroidDamage;
 
-    public float Health;
-    public float MaxHealth;
-    private float AsteroidBadDamage;
-    public Material UFOInvertColour;
-    public float speed;
-    public Text txtCollect;
-    public Text txtWintext;
-    public Text txtDamage;
-    public AudioSource PickupAudio;
-
-    public AudioSource PortalActiveAudio;
-
-    public AudioSource UFOMoveAudio;
-    
-    public HeathBarController healthBar;//this is a script
-    //public DamagePopUpController damagePopUpC;//this is a script
-
-
-  // public ParticleSystem AstroHit;
-    public GameObject portal;
-    bool isMoving= false;
+    // Movement
+    public float speed = 5f;
     private Rigidbody2D rb2d;
-    private int countScore;
-    // Start is called before the first frame update
-    
+
+    // Audio
+    public AudioSource PickupAudio;
+    public AudioSource UFOMoveAudio;
+
+    // Visual effects
+    public Material UFOInvertColour;
+    public GameObject portal;
+
+    // Health Bar
+    public HeathBarController healthBar;
+
+    private int collectedScore = 0;
+    private bool isMoving = false;
+
     void Start()
     {
-       rb2d=GetComponent<Rigidbody2D>();
-       countScore = 0;
-       Health=0f;
-      
-       MaxHealth=100f;
+        rb2d = GetComponent<Rigidbody2D>();
+        asteroidDamage = Random.Range(0.20f, 0.25f);
+
+        // Initialize UI
+        txtWinText.text = "";
+        txtDamage.text = "";
+        txtCollect.text = "Collect: 0";
+
+        // Set max health and current health
        healthBar.SetMaxHealth(1f);
        healthBar.setHealth(0f);
-       AsteroidBadDamage=UnityEngine.Random.Range (0.20f,0.25f);
-       txtWintext.text="";
-       txtDamage.text="";
-       txtCollect.text="Collect:";
 
-        
-        
-             
-             
-       //CounterUpdate();
-        /*Set the UFO Shader*/
-       UFOInvertColour.SetFloat("_Threshold",0);
-            
+        // healthBar.SetMaxHealth(MaxHealth); // Set the max health of the health bar
+        // healthBar.setHealth(Health);        // Set initial health
+
+        UFOInvertColour.SetFloat("_Threshold", 0);
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
-       //Store the current horizontal input in the float moveHorizontal.
-		float moveHorizontal = Input.GetAxis ("Horizontal");
-
-		//Store the current vertical input in the float moveVertical.
-		float moveVertical = Input.GetAxis ("Vertical");
-
-		//Use the two store floats to create a new Vector2 variable movement.
-		Vector2 movement = new Vector2 (moveHorizontal, moveVertical);
-        rb2d.AddForce(movement*speed);
-
-      
-       //resetScene();
+        HandleMovement();
     }
 
+    void Update()
+    {
+        HandleMovementAudio();
+    }
 
-private void Update() {
-   IsUFOMoving();
-  
-}
+    // Handles player's movement based on input
+    private void HandleMovement()
+    {
+        float moveHorizontal = Input.GetAxis("Horizontal");
+        float moveVertical = Input.GetAxis("Vertical");
 
+        Vector2 movement = new Vector2(moveHorizontal, moveVertical);
+        rb2d.AddForce(movement * speed);
+    }
 
-
-/*
-*Plays UFOMoveAudio when UFO is Moving
-*/
-void IsUFOMoving()
-{
-  
- 
-    if(rb2d.velocity.magnitude > 8)
-      {      
-          isMoving= true; 
-      }else 
-      {
-            animator.SetBool("IsUFOMoving", false);
-            isMoving =false;
-      }
-
-      if(isMoving)
-      {
-          if(!UFOMoveAudio.isPlaying)
-          {
-            
-             UFOMoveAudio.Play();
-          }
-      }
-       else 
-      {
-            animator.SetBool("IsUFOMoving", false);
+    // Handles UFO movement sound
+    private void HandleMovementAudio()
+    {
+        if (rb2d.linearVelocity.magnitude > 8 && !isMoving)
+        {
+            isMoving = true;
+            if (!UFOMoveAudio.isPlaying)
+                UFOMoveAudio.Play();
+        }
+        else if (rb2d.linearVelocity.magnitude <= 8 && isMoving)
+        {
+            isMoving = false;
             UFOMoveAudio.Stop();
-      }
-    
-      if (isMoving&&PauseMenuController.isGamePaused)
-        {
-        
-          UFOMoveAudio.Stop();
-       }
-    
-     
-}
-
-/*
-*Updates Score,after DataPickUp
-*/
-   void OnTriggerEnter2D(Collider2D other)
-    {
-        if(other.gameObject.CompareTag("PickUp"))
-        {
-            
-            other.gameObject.SetActive(false);
-            PickupAudio.Play();
-            countScore++;
-            CounterUpdate();
-            Destroy(other.gameObject);
-           
-
         }
 
-        if(other.gameObject.CompareTag("Portal"))
-        {    
-            UnityEngine.Debug.Log("can see Portal");
-            //StopAllConroutines();
-             animator.SetBool("CanSeePortal",true);
-             UnityEngine.Debug.Log("Start Animation");
-             PortalDelay(25f);
-              UnityEngine.Debug.Log("End Animation");
-             //delay not working
-            // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex+1);
-
-        }
-
-        
+        if (isMoving && PauseMenuController.isGamePaused)
+            UFOMoveAudio.Stop();
     }
 
-    
-     private void OnCollisionEnter2D(Collision2D other) 
-     {
-    
-        if(other.gameObject.CompareTag("AsteroidBad"))
+    // Trigger collision with pickups
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("PickUp"))
         {
-          
-          UnityEngine.Debug.Log("can see AsteroidBad");
-          UFOInvertColour.SetFloat("_Threshold",UFOLife());
- 
-          //AstroHit.Play();
-           if(Health>=1f)
-           {
-             UnityEngine.Debug.Log("UFO Crashed");
-             Application.Quit();  
-           }
-
+            HandlePickup(other);
         }
     }
 
-/*
-*Bug:player Still takes damage after level Clear
-*/
-float UFOLife()
-{
-    Transform damagePopUpTransform = Instantiate(pfDamagePopUp,rb2d.position,Quaternion.identity);
-    DamagePopUpController   damagePopUpC = damagePopUpTransform.GetComponent<DamagePopUpController>();
-    var CurrHealth = (Health+=AsteroidBadDamage);
-    UnityEngine.Debug.Log("CurrHealth"+CurrHealth);
-    healthBar.setHealth(CurrHealth);
-    damagePopUpC.SetDamageText( Mathf.Round(AsteroidBadDamage * 100f));
-    txtDamage.text=CurrHealth.ToString();
-   return CurrHealth;
-}
-
-
-   /*
-   *Tracks Score for different Levels
-   */
-    void CounterUpdate()
+    // Handles pickup logic
+    private void HandlePickup(Collider2D pickup)
     {
-      txtCollect.text="Collect:"+countScore.ToString();
-      
-      if(countScore>=6&&GetCurrentActiveScene()==1){
-
-          txtWintext.text = "Level Clear";
-        
-          portal.SetActive(true);
-          PortalActiveAudio.Play();
-
-      }
-      else 
-       if(countScore>=10 && GetCurrentActiveScene()==2)
-       {
-           txtWintext.text = "Level Clear";
-          
-            portal.SetActive(true);
-            PortalActiveAudio.Play();
-            
-
-       }
-       else if(countScore>=14&&GetCurrentActiveScene()==3)
-       {
-            txtWintext.text = "You WIN:Next Level in Dev";
-            
-            //Time.timeScale= 0f;//pause or freeze all objects within a scene *BUG Song still plays
-           // UFOMoveAudio.Stop();
-       }
+        pickup.gameObject.SetActive(false);
+        PickupAudio.Play();
+        collectedScore++;
+        UpdateScore();
     }
 
-     /*
-     Get The Current ActiveScene 
-     */
-    public static int  GetCurrentActiveScene()
+    // Updates the score and checks for level completion
+    private void UpdateScore()
     {
-      return    SceneManager.GetActiveScene().buildIndex;
+        txtCollect.text = "Collect: " + collectedScore;
+
+        if (collectedScore >= 6 && GetCurrentActiveScene() == 1)
+        {
+            txtWinText.text = "Level Clear";
+            portal.SetActive(true); // Assuming the portal is set active elsewhere, like when level is completed
+        }
+        else if (collectedScore >= 10 && GetCurrentActiveScene() == 2)
+        {
+            txtWinText.text = "Level Clear";
+            portal.SetActive(true); // Same here, after 10 collectibles
+        }
+        else if (collectedScore >= 14 && GetCurrentActiveScene() == 3)
+        {
+            txtWinText.text = "You WIN: Next Level in Dev";
+        }
     }
 
-//void resetScene()
-    // {
+    // Calculates UFO health after collision with asteroid
+    private float UFOLife()
+    {
+        // Apply damage
+        Health += asteroidDamage;
 
-    //     if (Input.GetKeyDown("R")) 
-    //     { //If you press R
-    //     Debug.Log("Work?");
-    //      SceneManager.LoadScene(SceneManager.GetActiveScene().ToString()); //Load scene called Game  
+        // Update health bar and display current health
+        healthBar.setHealth(Health);
+        txtDamage.text = (Health * 100).ToString("F1");
 
-    //     }
-    // }
+        if (Health >= 1f)
+        {
+            Debug.Log("UFO Crashed");
+            Application.Quit();  // This might be replaced with scene reload or end screen logic
+        }
 
+        return Health;
+    }
 
-   IEnumerator PortalDelay(float timeDelay)
-   {
-     yield return new WaitForSeconds(timeDelay);
-    
-   }
+    // Collision with asteroid handling (damage)
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("AsteroidBad"))
+        {
+            UFOInvertColour.SetFloat("_Threshold", UFOLife());
+        }
+    }
 
+    // Returns the current active scene index
+    public static int GetCurrentActiveScene()
+    {
+        return SceneManager.GetActiveScene().buildIndex;
+    }
 }

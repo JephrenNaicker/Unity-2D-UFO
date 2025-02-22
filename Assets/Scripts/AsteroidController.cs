@@ -25,7 +25,7 @@ public class AsteroidController : MonoBehaviour
    {
         m_Rigidbody = GetComponent<Rigidbody2D>();
         m_Speed=300f;    
-        m_Rigidbody.velocity = initialVelocity;
+        m_Rigidbody.linearVelocity = initialVelocity;
    }
 
 
@@ -39,7 +39,7 @@ public class AsteroidController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        lastFrameVelocity=m_Rigidbody.velocity;
+        lastFrameVelocity=m_Rigidbody.linearVelocity;
     }
 
 
@@ -76,7 +76,7 @@ public class AsteroidController : MonoBehaviour
         var direction = Vector3.Reflect(lastFrameVelocity.normalized, collisionNormal);
 
         //Debug.Log("Out Direction: " + direction);
-        m_Rigidbody.velocity = direction * Mathf.Max(speed, minVelocity);
+        m_Rigidbody.linearVelocity = direction * Mathf.Max(speed, minVelocity);
     }
 
 
