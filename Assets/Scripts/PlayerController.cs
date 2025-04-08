@@ -127,7 +127,8 @@ public class PlayerController : MonoBehaviour
         }
         else if (collectedScore >= 14 && GetCurrentActiveScene() == 3)
         {
-            txtWinText.text = "You WIN: Next Level in Dev";
+            txtWinText.text = "You WIN";
+            Time.timeScale = 0;
         }
     }
 
@@ -144,7 +145,7 @@ public class PlayerController : MonoBehaviour
         if (Health >= 1f)
         {
             Debug.Log("UFO Crashed");
-            Application.Quit();  // This might be replaced with scene reload or end screen logic
+            SceneManager.LoadScene(4);
         }
 
         return Health;
